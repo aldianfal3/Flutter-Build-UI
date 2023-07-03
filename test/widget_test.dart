@@ -13,7 +13,7 @@ import 'package:aldi/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const ALDI());
+    await tester.pumpWidget(const main());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

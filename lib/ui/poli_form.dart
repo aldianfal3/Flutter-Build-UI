@@ -1,4 +1,5 @@
 import 'package:aldi/model/poli.dart';
+import 'package:aldi/service/poli_service.dart';
 import 'package:aldi/ui/poli_page.dart';
 import 'package:flutter/material.dart';
 import 'poli_detail.dart';
@@ -45,13 +46,16 @@ _fileNamaPoli(TextEditingController _namaPoliCtrl) {
   );
 }
 
-
 _tombolSimpan(TextEditingController _namaPoliCtrl, BuildContext context) {
   return ElevatedButton(
-      onPressed: () {
-        Poli poli = new Poli(namaPoli: _namaPoliCtrl.text);
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: ((context) => poliDetail(poli: poli))));
+      onPressed: () async {
+        Poli poli =  new  Poli(namaPoli: _namaPoliCtrl.text);
+        await PoliService().simpan(poli).then((value) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: ((context) => poliDetail(poli: poli))));
+        });
       },
       child: const Text("Simpan"));
 }

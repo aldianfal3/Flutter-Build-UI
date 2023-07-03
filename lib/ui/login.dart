@@ -1,5 +1,9 @@
+import 'package:aldi/helpers/user_info.dart';
+import 'package:aldi/main.dart';
+import 'package:aldi/service/login_service.dart';
 import 'package:aldi/widget/loadingScreen.dart';
 import 'package:aldi/ui/beranda.dart';
+import 'package:aldi/widget/loadingScreen2.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -12,6 +16,7 @@ class _LoginState extends State<Login> {
   final _usernameCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   final _loginCtrl = TextEditingController();
+  final text = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,8 @@ class _LoginState extends State<Login> {
                         SizedBox(height: 20),
                         _passwordTextField(_passwordCtrl),
                         SizedBox(height: 40),
-                        _tombolLogin(_loginCtrl, context),
+                        _tombolLogin(
+                            _loginCtrl, context, _usernameCtrl, _passwordCtrl),
                       ],
                     ),
                   ),
@@ -57,27 +63,46 @@ class _LoginState extends State<Login> {
 
 Widget _usernameTextField(TextEditingController _usernameCtrl) {
   return TextFormField(
-    decoration: InputDecoration(labelText: "Username"),
+    decoration: InputDecoration(labelText: "username"),
     controller: _usernameCtrl,
   );
 }
 
 Widget _passwordTextField(TextEditingController _passwordCtrl) {
   return TextFormField(
-    decoration: InputDecoration(labelText: "Password"),
+    decoration: InputDecoration(labelText: "password"),
     controller: _passwordCtrl,
   );
 }
 
-Widget _tombolLogin(TextEditingController _loginCtrl, context) {
+Widget _tombolLogin(
+    TextEditingController _loginCtrl, context, _usernameCtrl, _passwordCtrl) {
   return Container(
       width: MediaQuery.of(context).size.width,
       child: ElevatedButton(
-          child: Text("Login"),
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => loadingSreen()),
-                (Route<dynamic> route) => false);
+          child: const Text("Login"),
+          onPressed: () async {
+            String username = _usernameCtrl.text;
+            String password = _passwordCtrl.text;
+            await LoginService().login(username, password).then((value) {
+              if (value == true) {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => loadingSreen()));
+              } else {
+                AlertDialog alertDialog = AlertDialog(
+                  content: const Text("Username atau Password Tidak Valid"),
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text("OK"),
+                      style: ElevatedButton.styleFrom(primary: Colors.green),
+                    )
+                  ],
+                );
+                showDialog(context: context, builder: (context) => alertDialog);
+              }
+            });
           }));
 }

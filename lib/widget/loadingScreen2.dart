@@ -28,8 +28,8 @@ class _loadingSreen2State extends State<loadingSreen2> {
     return const Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-          child: SpinKitFadingCircle(
-        color: Color.fromARGB(255, 251, 255, 1),
+          child: SpinKitCircle(
+        color: Colors.lightBlueAccent,
         size: 50.0,
       )),
     );
